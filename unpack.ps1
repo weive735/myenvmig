@@ -12,19 +12,16 @@ if (!(Test-Path $scoopDir) -Or ($($Host.UI.PromptForChoice($title, $question, $c
         $res = Rename-Item $scoopDir $($scoopDir + ".bk")
         if ($res -ne 0) { exit 1 }
     }
+
     7z.exe x -o"$scoopDir" $scoopPack
+
+    $path_to_shims = Join-Path $env:USERPROFILE, "scoop\shims"
+    if (![System.Environment]::GetEnvironmentVariable("PATH", "User").Split(";").Contains($path_to_shims)) {
+        $path = [System.Environment]::GetEnvironmentVariable("Path", "User")
+        [System.Environment]::SetEnvironmentVariable("PATH", $path + ";" + $path_to_shims)
+    }
+
 } else {
     write "Cancelled"
     exit 1
 }
-write Hello!
-
-
-# PACKING SCOOP
-#if (Test-Path $scoopPack) {
-#    $res = Remove-Item -Confirm $scoopPack
-#}
-#if (!(Test-Path $scoopPack)) {
-#    7z.exe a -bsp1 -bt $scoopPack $scoopDir
-#}
-
