@@ -13,5 +13,5 @@ if (Test-Path $scoopPack) {
     $res = Remove-Item -Confirm $scoopPack
 }
 if (!(Test-Path $scoopPack)) {
-    7z.exe a -bsp1 -bt $scoopPack $scoopDir
+    7z.exe a -bsp1 -bt $scoopPack "$scoopDir\*"
 }
