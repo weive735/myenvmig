@@ -15,10 +15,13 @@ if (!(Test-Path $scoopDir) -Or ($($Host.UI.PromptForChoice($title, $question, $c
 
     7z.exe x -o"$scoopDir" $scoopPack
 
-    $path_to_shims = Join-Path $env:USERPROFILE, "scoop\shims"
+    $path_to_shims = Join-Path $env:USERPROFILE "scoop\shims"
     if (![System.Environment]::GetEnvironmentVariable("PATH", "User").Split(";").Contains($path_to_shims)) {
         $path = [System.Environment]::GetEnvironmentVariable("Path", "User")
-        [System.Environment]::SetEnvironmentVariable("PATH", $path + ";" + $path_to_shims)
+        if (!$path.EndsWith(";")) { $path += ";" }
+        $newpath = $path + $path_to_shims + ";"
+        write $("update PATH=" + $newpath)
+        [System.Environment]::SetEnvironmentVariable("PATH", $newpath, "User")
     }
 
 } else {
